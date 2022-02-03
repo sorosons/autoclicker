@@ -9,7 +9,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.accessibility.AccessibilityManager
+import android.widget.EditText
 import com.github.nestorm001.autoclicker.service.FloatingClickService
 import com.github.nestorm001.autoclicker.service.autoClickService
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,11 +28,38 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        button.setOnClickListener {
+        val server=findViewById<EditText>(R.id.edtserver)
+        val edtctime=findViewById<EditText>(R.id.edtclickingtime)
+        val edtrefreshtime=findViewById<EditText>(R.id.edtrefreshtime)
+        val edtserverurl=findViewById<EditText>(R.id.edtserverurl)
+
+     //   edtserverurl.setText(Test.serverUrl+server.text.toString())
+        server.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                edtserverurl.setText(Test.serverUrl+server.text.toString())
+            }
+        })
+
+            button.setOnClickListener {
+              //  edtserverurl.setText(Test.serverUrl+server.text.toString())
+                Test.serverno = server.text.toString()
+                Test.clickingtime = edtctime.text.toString().toLongOrNull()!!
+                Test.refreshtime = edtrefreshtime.text.toString().toLongOrNull()!!
+                Test.serverUrl = edtserverurl.text.toString()
+
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
                     || Settings.canDrawOverlays(this)) {
                 serviceIntent = Intent(this@MainActivity,
                         FloatingClickService::class.java)
+            //    intent.putExtra("server",server.text.toString())
                 startService(serviceIntent)
                 onBackPressed()
             } else {

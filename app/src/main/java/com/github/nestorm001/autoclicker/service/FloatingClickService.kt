@@ -7,16 +7,15 @@ import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
-import com.github.nestorm001.autoclicker.R
-import com.github.nestorm001.autoclicker.TouchAndDragListener
-import com.github.nestorm001.autoclicker.dp2px
-import com.github.nestorm001.autoclicker.logd
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
+import android.content.Intent.getIntent
+import com.github.nestorm001.autoclicker.*
 
 
 /**
@@ -68,12 +67,20 @@ class FloatingClickService : Service() {
     }
 
     private var isOn = false
+
+
     private fun viewOnClick() {
+        Log.d("TAG", "Giriş")
+
+
+
+        Log.d("TAG", "Giriş")
+
         if (isOn) {
             timer?.cancel()
         } else {
             timer = fixedRateTimer(initialDelay = 0,
-                    period = 200) {
+                    period = 2000) {
                 view.getLocationOnScreen(location)
                 autoClickService?.click(location[0] + view.right + 10,
                         location[1] + view.bottom + 10)
@@ -82,6 +89,9 @@ class FloatingClickService : Service() {
         isOn = !isOn
         (view as TextView).text = if (isOn) "ON" else "OFF"
 
+
+
+        Log.d("TAG", "ÇIKIŞ")
     }
 
     override fun onDestroy() {
